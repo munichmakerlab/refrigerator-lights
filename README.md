@@ -24,10 +24,23 @@ Libraries
 ---------
 * [Espduino](https://github.com/tuanpmt/espduino) (ESP8266 Arduino library + ESP-bridge)
 * [FastLED](https://github.com/FastLED/FastLED) (LED light controller by FastLED library)
+* [RGBLEDS](https://github.com/AaronLiddiment/RGBLEDS) (LEDMatrix & LEDText)
+* [LedEffects by ratkins](https://bitbucket.org/ratkins/ledeffects/src/?at=default)
 
 MQTT-topics
 -----------
-t.b.d
+| topic                                | message                                            |
+| ------------------------------------ | -------------------------------------------------- |
+| mumalab/fridge/connected             | connected                                          |
+| mumalab/fridge/state                 | on / of                                            |
+| mumalab/fridge/brightness            | 0 to 255                                           |
+| mumalab/fridge/mode/animation/state  | on / off                                           |
+| mumalab/fridge/mode/animation/effect | twinkle / plasma / snake / life / sprite / rainbow |
+| mumalab/fridge/mode/ticker/state     | on / off                                           |
+| mumalab/fridge/mode/ticker/color     | #000000 to #ffffff                                 |
+| mumalab/fridge/mode/ticker/bounce    | 1 / 0                                              |
+| mumalab/fridge/mode/ticker/direction | left / right / up / down                           |
+| mumalab/fridge/mode/ticker/text      | scroll message as text...                          |
 
 TODOs
 -----
