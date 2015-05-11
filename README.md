@@ -20,6 +20,10 @@ Hardware
 * Teensy 3.1 microcontroller
 * ESP8266 (ESP-12) WiFi board
 
+Wiring
+------
+![wiring diagram](/wiring/refrigerator-lights-wiring.png "wiring diagram")
+
 Libraries
 ---------
 * [Espduino](https://github.com/tuanpmt/espduino) (ESP8266 Arduino library + ESP-bridge)
