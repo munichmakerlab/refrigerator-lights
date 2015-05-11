@@ -36,7 +36,7 @@ MQTT-topics
 | topic                                | message                                            |
 | ------------------------------------ | -------------------------------------------------- |
 | mumalab/fridge/connected             | connected                                          |
-| mumalab/fridge/state                 | on / of                                            |
+| mumalab/fridge/state                 | on / off                                           |
 | mumalab/fridge/brightness            | 0 to 255                                           |
 | mumalab/fridge/mode/animation/state  | on / off                                           |
 | mumalab/fridge/mode/animation/effect | twinkle / plasma / snake / life / sprite / rainbow |
