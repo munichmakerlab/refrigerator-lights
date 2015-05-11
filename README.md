@@ -5,6 +5,8 @@ Refrigerator Lights is a simple blinkenlights update of the refrigerator of the 
 It drives a small WS2812b LED strip based matrix of 15x10 LEDs behind a diffuse cover; which replaces the old lamp. 
 Controllable by MQTT over ESP8266 WiFi module.
 
+[![Refrigerator Lights screenshot](https://cloud.githubusercontent.com/assets/6171589/7560420/513b217e-f7c3-11e4-8fe3-a6d3037b3baf.jpg)](https://www.tumblr.com/video/munichmakerlab/116758165625/700/)
+
 Features
 --------
 * FastLED library for all the fancy animations
