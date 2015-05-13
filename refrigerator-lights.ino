@@ -31,19 +31,23 @@
 #include <FontMatrise.h>
 #include <espduino.h>
 #include <mqtt.h>
-#include "Plasma.cpp"
-#include "TestPattern.cpp"
-#include "Snake.cpp"
+#include "Animation.h"
+#include "Ticker.h"
 #include "Twinkle.cpp"
-#include "DeadChannel.cpp"
-#include "Bouncy.cpp"
-#include "HiRez.cpp"
-#include "Boxes.cpp"
+#include "Plasma.cpp"
+#include "Snake.cpp"
 #include "Life.cpp"
 #include "Sprite.cpp"
 #include "RainbowColor.cpp"
-#include "Animation.h"
-#include "Ticker.h"
+
+// Teensy 3.1 pinout:
+// ====================
+// 0 = RX >> EXP8266 TX
+// 1 = TX >> ESP8266 RX
+// 2 = ESP8266 CH_PD
+// 3 = LED data pin 1
+// 4 = LED data pin 2
+// 5 = LED data pin 3
 
 // initial ESP8266
 ESP esp(&Serial1, &Serial, 2);
@@ -51,9 +55,9 @@ MQTT mqtt(&esp);
 boolean wifiConnected = false;
 
 // define LED digital pin, color order, chipset and brightness
-#define LED_PIN1    4 //2
-#define LED_PIN2    5 //14
-#define LED_PIN3    6 //7
+#define LED_PIN1    3
+#define LED_PIN2    4
+#define LED_PIN3    5
 #define COLOR_ORDER   GRB
 #define CHIPSET     WS2812B
 #define BRIGHTNESS  170
