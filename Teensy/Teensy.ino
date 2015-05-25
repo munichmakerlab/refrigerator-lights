@@ -99,24 +99,23 @@ void processSerialData(String strTopic, String strMessage)
   // handle all mqtt messages
   if (strTopic.startsWith("mumalab")) {
     if (strTopic == "mumalab/fridge/state") {
-      state = strMessage == "on" ? 1 : 0;
+      state = strMessage.toInt();
     } else if (strTopic == "mumalab/fridge/brightness") {
       brightness = strMessage.toInt();
       brightness = min(255, max(brightness, 0));
       FastLED.setBrightness(brightness);
     } else if (strTopic == "mumalab/fridge/mode/animation/effect") {
-      String effectName = strMessage;
-      if (effectName == "twinkle") {
+      if (strMessage == "twinkle") {
         animation.setEffect(1);
-      } else if (effectName == "plasma") {
+      } else if (strMessage == "plasma") {
         animation.setEffect(2);
-      } else if (effectName == "snake") {
+      } else if (strMessage == "snake") {
         animation.setEffect(3);
-      } else if (effectName == "life") {
+      } else if (strMessage == "life") {
         animation.setEffect(4);
-      } else if (effectName == "sprite") {
+      } else if (strMessage == "sprite") {
         animation.setEffect(5);
-      } else if (effectName == "rainbow") {
+      } else if (strMessage == "rainbow") {
         animation.setEffect(6);
       }
       animation.setState(1);
