@@ -14,6 +14,7 @@ PubSubClient client(server);
 void debugPrint(String strMessage) {
   Serial.print("Debug: ");
   Serial.println(strMessage);
+  Serial.flush();
 }
 
 // callback method to handle received mqtt messages
@@ -27,6 +28,7 @@ void passReceivedMessage(String strTopic, String strMessage) {
   Serial.print(strTopic);
   Serial.print(":");
   Serial.println(strMessage);
+  Serial.flush();
 }
 
 // handle received serial data
