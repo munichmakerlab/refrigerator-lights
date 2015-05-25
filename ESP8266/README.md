@@ -22,16 +22,16 @@ Libraries
 
 MQTT Topics
 -----------
-| topic                                | message                                            |
-| ------------------------------------ | -------------------------------------------------- |
-| mumalab/fridge/uptime                | String(millis())                                   |
-| mumalab/fridge/state                 | 1 / 0                                              |
-| mumalab/fridge/brightness            | 0 to 255                                           |
-| mumalab/fridge/mode/animation/effect | twinkle / plasma / snake / life / sprite / rainbow |
-| mumalab/fridge/mode/ticker/color     | #000000 to #ffffff                                 |
-| mumalab/fridge/mode/ticker/bounce    | 1 / 0                                              |
-| mumalab/fridge/mode/ticker/direction | left / right / up / down                           |
-| mumalab/fridge/mode/ticker/text      | scroll message as text...                          |
+| topic                           | message                                            |
+| ------------------------------- | -------------------------------------------------- |
+| mumalab/fridge/uptime           | String(millis())                                   |
+| mumalab/fridge/state            | 1 / 0                                              |
+| mumalab/fridge/brightness       | 0 to 255                                           |
+| mumalab/fridge/effect           | twinkle / plasma / snake / life / sprite / rainbow |
+| mumalab/fridge/ticker/color     | #000000 to #ffffff                                 |
+| mumalab/fridge/ticker/bounce    | 1 / 0                                              |
+| mumalab/fridge/ticker/direction | left / right / up / down                           |
+| mumalab/fridge/ticker/text      | scroll message as text...                          |
 
 TODOs
 -----
