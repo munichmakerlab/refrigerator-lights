@@ -104,7 +104,7 @@ void processSerialData(String strTopic, String strMessage)
       brightness = strMessage.toInt();
       brightness = min(255, max(brightness, 0));
       FastLED.setBrightness(brightness);
-    } else if (strTopic == "mumalab/fridge/mode/animation/effect") {
+    } else if (strTopic == "mumalab/fridge/effect") {
       if (strMessage == "twinkle") {
         animation.setEffect(1);
       } else if (strMessage == "plasma") {
@@ -120,15 +120,15 @@ void processSerialData(String strTopic, String strMessage)
       }
       animation.setState(1);
       ticker.setState(0);
-    } else if (strTopic == "mumalab/fridge/mode/ticker/color") {
+    } else if (strTopic == "mumalab/fridge/ticker/color") {
       ticker.setColor(strMessage);
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/mode/ticker/bounce") {
+    } else if (strTopic == "mumalab/fridge/ticker/bounce") {
       ticker.setBounce(strMessage.toInt() == 1 ? true : false);
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/mode/ticker/direction") {
+    } else if (strTopic == "mumalab/fridge/ticker/direction") {
       if (strMessage == "left")
         ticker.setDirection(1);
       else if (strMessage == "right")
@@ -139,7 +139,7 @@ void processSerialData(String strTopic, String strMessage)
         ticker.setDirection(4);
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/mode/ticker/text") {
+    } else if (strTopic == "mumalab/fridge/ticker/text") {
       ticker.setText(strMessage);
       ticker.setState(1);
       animation.setState(0);
