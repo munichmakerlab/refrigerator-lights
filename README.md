@@ -19,6 +19,7 @@ Hardware
 * 5V 12A power supply
 * Teensy 3.1 microcontroller
 * ESP8266 (ESP-12) WiFi board
+* [ESP8266-Adapter-Board](http://www.electrodragon.com/product/esp8266-smd-adapter-board) with 3.3V regulator
 
 Wiring
 ------
@@ -26,27 +27,13 @@ Wiring
 
 Libraries
 ---------
-* [Espduino](https://github.com/tuanpmt/espduino) (ESP8266 Arduino library + ESP-bridge)
-* [FastLED](https://github.com/FastLED/FastLED) (LED light controller by FastLED library)
-* [RGBLEDS](https://github.com/AaronLiddiment/RGBLEDS) (LEDMatrix & LEDText)
-* [LedEffects by ratkins](https://bitbucket.org/ratkins/ledeffects/src/?at=default)
+* [Teensy Libraries](https://github.com/munichmakerlab/refrigerator-lights/tree/master/Teensy#libraries)
+* [ESP8266 Libraries](https://github.com/munichmakerlab/refrigerator-lights/tree/master/ESP8266#libraries)
 
-MQTT-topics
+MQTT Topics
 -----------
-| topic                                | message                                            |
-| ------------------------------------ | -------------------------------------------------- |
-| mumalab/fridge/connected             | connected                                          |
-| mumalab/fridge/state                 | on / off                                           |
-| mumalab/fridge/brightness            | 0 to 255                                           |
-| mumalab/fridge/mode/animation/state  | on / off                                           |
-| mumalab/fridge/mode/animation/effect | twinkle / plasma / snake / life / sprite / rainbow |
-| mumalab/fridge/mode/ticker/state     | on / off                                           |
-| mumalab/fridge/mode/ticker/color     | #000000 to #ffffff                                 |
-| mumalab/fridge/mode/ticker/bounce    | 1 / 0                                              |
-| mumalab/fridge/mode/ticker/direction | left / right / up / down                           |
-| mumalab/fridge/mode/ticker/text      | scroll message as text...                          |
+* [MQTT Topics](https://github.com/munichmakerlab/refrigerator-lights/tree/master/ESP8266#mqtt-topics)
 
 TODOs
 -----
 * bugfix and add the text ticker class
-* stay alive or reset ESP8266 on freeze or unstable handling...
