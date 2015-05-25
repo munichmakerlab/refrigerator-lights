@@ -25,7 +25,7 @@ MQTT Topics
 | topic                                | message                                            |
 | ------------------------------------ | -------------------------------------------------- |
 | mumalab/fridge/uptime                | String(millis())                                   |
-| mumalab/fridge/state                 | on / off                                           |
+| mumalab/fridge/state                 | 1 / 0                                              |
 | mumalab/fridge/brightness            | 0 to 255                                           |
 | mumalab/fridge/mode/animation/effect | twinkle / plasma / snake / life / sprite / rainbow |
 | mumalab/fridge/mode/ticker/color     | #000000 to #ffffff                                 |
