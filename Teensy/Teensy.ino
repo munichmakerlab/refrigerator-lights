@@ -91,6 +91,7 @@ void mqttPublish(String strTopic, String strMessage) {
   Serial1.print(strTopic);
   Serial1.print(":");
   Serial1.println(strMessage);
+  Serial1.flush();
 }
 
 // handle received serial data (myqtt messages from ESP8266)
