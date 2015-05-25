@@ -75,11 +75,11 @@ void setup()
       // subscribe to mqtt topics
       client.subscribe("mumalab/fridge/state");
       client.subscribe("mumalab/fridge/brightness");
-      client.subscribe("mumalab/fridge/mode/animation/effect");
-      client.subscribe("mumalab/fridge/mode/ticker/color");
-      client.subscribe("mumalab/fridge/mode/ticker/bounce");
-      client.subscribe("mumalab/fridge/mode/ticker/direction");
-      client.subscribe("mumalab/fridge/mode/ticker/text");
+      client.subscribe("mumalab/fridge/effect");
+      client.subscribe("mumalab/fridge/ticker/color");
+      client.subscribe("mumalab/fridge/ticker/bounce");
+      client.subscribe("mumalab/fridge/ticker/direction");
+      client.subscribe("mumalab/fridge/ticker/text");
       MQTTconnected = true;
       debugPrint("MQTT connected");
     } else {
