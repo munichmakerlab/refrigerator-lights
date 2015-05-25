@@ -9,7 +9,7 @@ Requirements
 You have to install the Arduino IDE 1.6.4.
 * **Arduino** > **Preferences** > "Additional Boards Manager URLs:" and add: **http://arduino.esp8266.com/package_esp8266com_index.json**
 * **Arduino** > **Tools** > **Board** > **Boards Manager** > type in **ESP8266** and install the board
-* download PubSubClient (see [Libraries]) and copy folder to Arduino library path
+* download PubSubClient (see [Libraries](https://github.com/munichmakerlab/refrigerator-lights/tree/master/ESP8266#libraries)) and copy folder to Arduino library path
 
 Hardware
 --------
