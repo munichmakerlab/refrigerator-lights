@@ -53,7 +53,7 @@ public:
                 for (int i = 0; i < deltaLen; i++) {
                     delta[i] = 0;
                 }
-                LEDS.show();
+                FastLED.show();
             }
             fadeout();
         }
@@ -112,7 +112,7 @@ public:
             for (int i = 0; i < width * height; i++) {
                 leds[i]--;
             }
-            LEDS.show();
+            FastLED.show();
         }
     }
 
