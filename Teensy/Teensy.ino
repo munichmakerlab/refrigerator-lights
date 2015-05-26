@@ -151,6 +151,13 @@ void processSerialData(String strTopic, String strMessage)
   Serial.print(strTopic);
   Serial.print(":");
   Serial.println(strMessage);
+  Serial.print("state: ");
+  Serial.println(state);
+  Serial.print("brightness: ");
+  Serial.println(brightness);
+  Serial.print("effect: ");
+  Serial.println(animation.effect());
+  Serial.println("");
 }
 
 // one frame of animations
@@ -183,14 +190,14 @@ void allOff() {
   FastLED.show();
 }
 
-void doPlasma() {
-  Plasma plasma(leds[0], leds.Width(), leds.Height());
-  plasma.start();
-}
-
 void doTwinkle() {
   Twinkle twinkle(leds[0], leds.Width(), leds.Height(), true, true);
   twinkle.start();
+}
+
+void doPlasma() {
+  Plasma plasma(leds[0], leds.Width(), leds.Height());
+  plasma.start();
 }
 
 void doSnake() {
@@ -208,6 +215,11 @@ void doSprite() {
   sprite.start();
 }
 
+void doRainbowColor() {
+  RainbowColor rainbowColor(leds[0], leds.Width(), leds.Height());
+  rainbowColor.start();
+}
+
 void doScrollText() {
   if (ScrollingMsg.UpdateText() == -1) {
     ScrollingMsg.SetText((unsigned char *)TxtDemo, sizeof(TxtDemo) - 1);
@@ -217,16 +229,10 @@ void doScrollText() {
   delay(10);
 }
 
-void doRainbowColor() {
-  RainbowColor rainbowColor(leds[0], leds.Width(), leds.Height());
-  rainbowColor.start();
-}
-
 // setup demo code
 void setup() {
   // set default speed for serial (for debug with serial monitor)
   Serial.begin(9600);
-  delay(2000);
 
   // set speed of UART to communicate with ESP8266 WiFi module
   Serial.println("initial UART");
@@ -238,7 +244,7 @@ void setup() {
   // initial
   state = 1;
   animation.setState(1);
-  animation.setEffect(1);
+  animation.setEffect(6);
   ticker.setState(0);
 
   brightness = 170;
@@ -265,7 +271,7 @@ void loop()
 
   // handle received serial commands
   if (!SerialReceiver::isReady) {
-    delay(10);
+    //delay(10);
     return;
   }
   // handles the received data (command and message)
