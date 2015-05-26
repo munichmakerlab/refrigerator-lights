@@ -51,7 +51,7 @@ public:
             } else {
                 blit(heartData, 0, random(0, width - spriteWidth), random(0, height - spriteHeight));
             }
-            LEDS.show();
+            FastLED.show();
             delay(100);
             for (int i = 0; i < width * height; i++) {
                 leds[i].fadeToBlackBy(64);
