@@ -51,7 +51,7 @@ public:
                     }
                 }
             }
-            LEDS.show();
+            FastLED.show();
         }
     }
 };
