@@ -81,7 +81,7 @@ public:
             for (byte i = 0; i < SNAKE_LENGTH; i++) {
                 pixel(pixels[i].x, pixels[i].y) = colours[i] %= (255 - i * (255 / SNAKE_LENGTH));
             }
-            LEDS.show();
+            FastLED.show();
             delay(30);
             clearLeds();
         }
