@@ -35,7 +35,7 @@ public:
                 pixel(x, y) = CHSV((v >> 8) + 127, 255, 255);
             }
         }
-        LEDS.show();
+        FastLED.show();
     }
     
     uint8_t sin8(uint16_t x) {
