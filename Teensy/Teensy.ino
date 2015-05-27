@@ -59,18 +59,16 @@
 int state = 1;
 Animation animation;
 Ticker ticker;
-
 int brightness = BRIGHTNESS;
 
 // initial matrix layout (to get led strip index by x/y)
 #define MATRIX_WIDTH   15
 #define MATRIX_HEIGHT  10
 #define MATRIX_TYPE  HORIZONTAL_ZIGZAG_MATRIX
-
 cLEDMatrix<MATRIX_WIDTH, MATRIX_HEIGHT, MATRIX_TYPE> leds;
 
+// initial scroll message
 cLEDText ScrollingMsg;
-
 const unsigned char TxtDemo[] = { EFFECT_SCROLL_LEFT "      LEFT SCROLL "
                   EFFECT_SCROLL_RIGHT "      LLORCS THGIR"
                   EFFECT_SCROLL_DOWN "      SCROLL DOWN       SCROLL DOWN      " EFFECT_FRAME_RATE "\x04" " SCROLL DOWN      " EFFECT_FRAME_RATE "\x00" " "
@@ -88,6 +86,9 @@ const unsigned char TxtDemo[] = { EFFECT_SCROLL_LEFT "      LEFT SCROLL "
 
 // publish mqtt message to ESP8266 over Serial1
 void mqttPublish(String strTopic, String strMessage) {
+  // send resetChar + topic + separator + message + \n
+  // f.e. "#mumalab/fridge/state:1\n"
+  Serial1.print(SerialReceiver::resetChar);
   Serial1.print(strTopic);
   Serial1.print(":");
   Serial1.println(strMessage);
@@ -97,6 +98,9 @@ void mqttPublish(String strTopic, String strMessage) {
 // handle received serial data (myqtt messages from ESP8266)
 void processSerialData(String strTopic, String strMessage)
 {
+  // remove all leading and trailing whitespaces
+  strTopic.trim();
+  strMessage.trim();
   // handle all mqtt messages
   if (strTopic.startsWith("mumalab")) {
     if (strTopic == "mumalab/fridge/state") {
@@ -238,8 +242,9 @@ void setup() {
   Serial.println("initial UART");
   Serial1.begin(115200);
 
-  // initial the serial receiver with ':' separator
-  SerialReceiver::initial(':');
+  // initial the serial receiver with 'Serial1' serialport, ':' separator and '#' reset char
+  // SerialReceiver will reset collection data on '#'
+  SerialReceiver::initial(Serial1, ':', '#');
 
   // initial
   state = 1;
@@ -271,7 +276,11 @@ void loop()
 
   // handle received serial commands
   if (!SerialReceiver::isReady) {
+<<<<<<< HEAD
+//    delay(10);
+=======
     //delay(10);
+>>>>>>> origin/master
     return;
   }
   // handles the received data (command and message)
@@ -282,6 +291,5 @@ void loop()
 
 // handle serial receiver events
 void serialEvent1() {
-  // passin Serial1 and collect all serial data
-  SerialReceiver::processSerialEvent(Serial1);
+  SerialReceiver::processSerialEvent();
 }

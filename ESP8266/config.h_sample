@@ -1,0 +1,8 @@
+// define your WiFi ssid and password
+#define WIFI_SSID "..."
+#define WIFI_PASS "..."
+// define your mqtt broker server ip address
+IPAddress MQTT_SERVER_ADDRESS(0, 0, 0, 0);
+// define your mqtt broker user and password
+#define MQTT_USER "..."
+#define MQTT_PASS "..."

@@ -1,17 +1,38 @@
+/******************************************************************************
+  The MIT License (MIT)
+
+  Copyright (c) 2015 Juergen Skrotzky alias Jorgen (JorgenVikingGod@gmail.com)
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  THE SOFTWARE.
+******************************************************************************/
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include "SerialReceiver.h"
+#include "config.h"
 
-const char *ssid =	"SSID";		// cannot be longer than 32 characters!
-const char *pass =	"PASS";		//
-
-// Update these with values suitable for your network.
-IPAddress server(0, 0, 0, 0); // add here the IP address of your MQTT broker
-
-PubSubClient client(server);
+// initial mqtt client with mqtt broker server ip address
+PubSubClient client(MQTT_SERVER_ADDRESS);
 
 // helper debug message
 void debugPrint(String strMessage) {
+  Serial.print(SerialReceiver::resetChar);
   Serial.print("Debug: ");
   Serial.println(strMessage);
   Serial.flush();
@@ -25,6 +46,7 @@ void mqttMessageReceived(const MQTT::Publish& pub) {
 
 // passthrough mqtt message to Teensy over serial
 void passReceivedMessage(String strTopic, String strMessage) {
+  Serial.print(SerialReceiver::resetChar);
   Serial.print(strTopic);
   Serial.print(":");
   Serial.println(strMessage);
@@ -48,25 +70,31 @@ void setup()
   Serial.begin(115200);
   delay(10);
 
-  // initial the serial receiver with ':' separator
-  SerialReceiver::initial(':');
+  // initial the serial receiver with 'Serial' serialport, ':' separator and '#' reset char
+  // SerialReceiver will reset collection data on '#'
+  SerialReceiver::initial(Serial, ':', '#');
 
+  // bind callback function to handle incomming mqtt messages
   client.set_callback(mqttMessageReceived);
 
-  WiFi.begin(ssid, pass);
+  // initial and connect WiFi
+  WiFi.begin(WIFI_SSID, WIFI_PASS);
 
+  // check connection
   int retries = 0;
   while ((WiFi.status() != WL_CONNECTED) && (retries < 10)) {
     retries++;
     delay(500);
   }
   if (WiFi.status() == WL_CONNECTED) {
+    debugPrint("");
     debugPrint("WiFi connected");
   }
 
+  // connect to mqtt broker
   boolean MQTTconnected = false;
   while(!MQTTconnected) {
-    if (client.connect(MQTT::Connect("FRIDGE-AP").set_auth("MQTT-USER", "MQTT-PASS"))) {
+    if (client.connect(MQTT::Connect("FRIDGE").set_auth(MQTT_USER, MQTT_PASS))) {
       // get uptime as String class
       String strUptime = String(millis());
       int strUptime_len = strUptime.length() + 1;
@@ -82,8 +110,12 @@ void setup()
       client.subscribe("mumalab/fridge/ticker/bounce");
       client.subscribe("mumalab/fridge/ticker/direction");
       client.subscribe("mumalab/fridge/ticker/text");
+<<<<<<< HEAD
+=======
       MQTTconnected = true;
+>>>>>>> origin/master
       debugPrint("MQTT connected");
+      MQTTconnected = true;
     } else {
       debugPrint("MQTT connection ERROR");
     }
@@ -100,14 +132,13 @@ void loop()
     delay(10);
     return;
   }
-  // handles the received data (command and payload == topic and message)
+  // handles the received data (command and message)
   processSerialData(SerialReceiver::command, SerialReceiver::payload);
-  // reset old data and wait for new serial data
+  // reset current comand and be ready to get new from serial
   SerialReceiver::reset();
 }
 
 // handle serial receiver events
 void serialEvent() {
-  // passin serial port and collect data
-  SerialReceiver::processSerialEvent(Serial);
+  SerialReceiver::processSerialEvent();
 }
