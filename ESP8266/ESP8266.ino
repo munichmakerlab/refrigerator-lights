@@ -110,10 +110,6 @@ void setup()
       client.subscribe("mumalab/fridge/ticker/bounce");
       client.subscribe("mumalab/fridge/ticker/direction");
       client.subscribe("mumalab/fridge/ticker/text");
-<<<<<<< HEAD
-=======
-      MQTTconnected = true;
->>>>>>> origin/master
       debugPrint("MQTT connected");
       MQTTconnected = true;
     } else {
