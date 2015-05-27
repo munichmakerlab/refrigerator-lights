@@ -276,11 +276,7 @@ void loop()
 
   // handle received serial commands
   if (!SerialReceiver::isReady) {
-<<<<<<< HEAD
-//    delay(10);
-=======
     //delay(10);
->>>>>>> origin/master
     return;
   }
   // handles the received data (command and message)
