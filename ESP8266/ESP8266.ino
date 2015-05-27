@@ -50,7 +50,6 @@ void passReceivedMessage(String strTopic, String strMessage) {
   Serial.print(strTopic);
   Serial.print(":");
   Serial.println(strMessage);
-  Serial.flush();
 }
 
 // handle received serial data
