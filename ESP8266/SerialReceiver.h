@@ -16,6 +16,9 @@ class SerialReceiver {
       hasPayload = false;
       command = "";
       payload = "";
+      // reserve 200 bytes for the inputString:
+      command.reserve(200);
+      payload.reserve(200);
     }
     static void initial(Stream &serialPort, char sep=' ', char res=' ') {
       reset();

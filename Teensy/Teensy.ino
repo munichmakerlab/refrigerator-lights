@@ -101,6 +101,13 @@ void processSerialData(String strTopic, String strMessage)
   // remove all leading and trailing whitespaces
   strTopic.trim();
   strMessage.trim();
+  
+  // print out debug messages
+  Serial.print("Received: ");
+  Serial.print(strTopic);
+  Serial.print(":");
+  Serial.println(strMessage);
+  
   // handle all mqtt messages
   if (strTopic.startsWith("mumalab")) {
     if (strTopic == "mumalab/fridge/state") {
@@ -149,19 +156,15 @@ void processSerialData(String strTopic, String strMessage)
       ticker.setState(1);
       animation.setState(0);
     }
+    // print out debug messages
+    Serial.print("state: ");
+    Serial.println(state);
+    Serial.print("brightness: ");
+    Serial.println(brightness);
+    Serial.print("effect: ");
+    Serial.println(animation.effect());
+    Serial.println("");
   }
-  // print out debug messages
-  Serial.print("Received: ");
-  Serial.print(strTopic);
-  Serial.print(":");
-  Serial.println(strMessage);
-  Serial.print("state: ");
-  Serial.println(state);
-  Serial.print("brightness: ");
-  Serial.println(brightness);
-  Serial.print("effect: ");
-  Serial.println(animation.effect());
-  Serial.println("");
 }
 
 // one frame of animations
@@ -281,7 +284,6 @@ void loop()
   }
   // handles the received data (command and message)
   processSerialData(SerialReceiver::command, SerialReceiver::payload);
-  // reset current comand and be ready to get new from serial
   SerialReceiver::reset();
 }
 
