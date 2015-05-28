@@ -6,3 +6,79 @@ IPAddress MQTT_SERVER_ADDRESS(0, 0, 0, 0);
 // define your mqtt broker user and password
 #define MQTT_USER "..."
 #define MQTT_PASS "..."
+
+
+// define mqtt protocoll struct
+struct sMQTTProtocoll {
+  String normalStr;
+  String shortStr;
+  sMQTTProtocoll(String strNormal="", String strShort="") {
+    normalStr = strNormal;
+    shortStr = strShort;
+  }
+};
+
+// initial all mqtt topics with short versions
+const sMQTTProtocoll sMQTTTopicsMap[] = {
+  {"mumalab/fridge/state",            "m/s"},
+  {"mumalab/fridge/brightness",       "m/b"},
+  {"mumalab/fridge/effect",           "m/e"},
+  {"mumalab/fridge/ticker/color",     "m/tc"},
+  {"mumalab/fridge/ticker/bounce",    "m/tb"},
+  {"mumalab/fridge/ticker/direction", "m/td"},
+  {"mumalab/fridge/ticker/text",      "m/tt"}
+};
+const int topicsMap_count = sizeof(sMQTTTopicsMap) / sizeof(sMQTTProtocoll);
+// get mqtt topic or short version (bShort==true)
+String getMQTTTopic(String strTopic, bool bShort=false) {
+  for (int i = 0; i < topicsMap_count; ++i) {
+    sMQTTProtocoll sValue = sMQTTTopicsMap[i];
+    if (bShort && sValue.normalStr == strTopic)
+      return sValue.shortStr;
+    else if (!bShort && sValue.shortStr == strTopic)
+      return sValue.normalStr;
+  }
+  return "N/A";
+}
+
+// initial all mqtt effect messages with short version
+const sMQTTProtocoll sMQTTEffectsMap[] = {
+  {"twinkle", "1"},
+  {"plasma",  "2"},
+  {"snake",   "3"},
+  {"life",    "4"},
+  {"sprite",  "5"},
+  {"rainbow", "6"}
+};
+const int effectMap_count = sizeof(sMQTTEffectsMap) / sizeof(sMQTTProtocoll);
+// get mqtt topic or short version (bShort==true)
+String getMQTTEffect(String strEffectName, bool bShort=false) {
+  for (int i = 0; i < effectMap_count; ++i) {
+    sMQTTProtocoll sValue = sMQTTEffectsMap[i];
+    if (bShort && sValue.normalStr == strEffectName)
+      return sValue.shortStr;
+    else if (!bShort && sValue.shortStr == strEffectName)
+      return sValue.normalStr;
+  }
+  return "N/A";
+}
+
+// initial all mqtt ticker direction messages with short version
+const sMQTTProtocoll sMQTTTickerDirectionsMap[] = {
+  {"left",  "1"},
+  {"right", "2"},
+  {"up",    "3"},
+  {"down",  "4"}
+};
+const int tickerDirectionMap_count = sizeof(sMQTTTickerDirectionsMap) / sizeof(sMQTTProtocoll);
+// get mqtt topic or short version (bShort==true)
+String getMQTTTickerDirection(String strTickerDirection, bool bShort=false) {
+  for (int i = 0; i < tickerDirectionMap_count; ++i) {
+    sMQTTProtocoll sValue = sMQTTTickerDirectionsMap[i];
+    if (bShort && sValue.normalStr == strTickerDirection)
+      return sValue.shortStr;
+    else if (!bShort && sValue.shortStr == strTickerDirection)
+      return sValue.normalStr;
+  }
+  return "N/A";
+}

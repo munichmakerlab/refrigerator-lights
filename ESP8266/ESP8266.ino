@@ -35,7 +35,7 @@ void debugPrint(String strMessage) {
   Serial.print(SerialReceiver::resetChar);
   Serial.print("Debug: ");
   Serial.println(strMessage);
-  Serial.flush();
+  //Serial.flush();
 }
 
 // callback method to handle received mqtt messages
@@ -46,17 +46,39 @@ void mqttMessageReceived(const MQTT::Publish& pub) {
 
 // passthrough mqtt message to Teensy over serial
 void passReceivedMessage(String strTopic, String strMessage) {
+  // get short version of mqtt topic (minimize serial traffic)
+  // f.e. "mumalab/fridge/state" >> "m/s"
+  strTopic = getMQTTTopic(strTopic, true);
+  // replace some messages to short version (minimize serial traffic)
+  // f.e. "plasma" >> "2" for topic "m/e"
+  if (strTopic == "m/e") 
+    strMessage = getMQTTEffect(strMessage, true);
+  else if (strTopic == "m/td") 
+    strMessage = getMQTTTickerDirection(strMessage, true);
+  // send resetChar + topic + separator + message + \n
+  // f.e. "#m/s:1\n"
   Serial.print(SerialReceiver::resetChar);
   Serial.print(strTopic);
   Serial.print(":");
   Serial.println(strMessage);
+  Serial.flush();
 }
 
 // handle received serial data
 void processSerialData(String strTopic, String strMessage)
 {
   // publish mqtt messages from Teensy
-  if (strTopic.startsWith("mumalab")) {
+  if (strTopic.startsWith("m/")) {
+    // get original mqtt topic by short version 
+    // f.e. "m/s" >> "mumalab/fridge/state"
+    strTopic = getMQTTTopic(strTopic, false);    
+    // replace short messages to original mqtt messages
+    // f.e. "2" >> "plasma" for topic "mumalab/fridge/effect"
+    if (strTopic == "mumalab/fridge/effect") 
+      strMessage = getMQTTEffect(strMessage, false);
+    else if (strTopic == "mumalab/fridge/ticker/direction") 
+      strMessage = getMQTTTickerDirection(strMessage, false);
+    // publish mqtt message with given topic
     client.publish(strTopic, strMessage);
   } else {
     debugPrint(strTopic + ":" + strMessage);
@@ -101,7 +123,11 @@ void setup()
       strUptime.toCharArray(charUptime, strUptime_len);
       // publish uptime, to say I'm alive
       client.publish("mumalab/fridge/uptime", charUptime);
-      // subscribe to mqtt topics
+      // subscribe to all mqtt topics
+      for (int i = 0; i < topicsMap_count; ++i) {
+        client.subscribe(sMQTTTopicsMap[i].normalStr);
+      }
+      /*
       client.subscribe("mumalab/fridge/state");
       client.subscribe("mumalab/fridge/brightness");
       client.subscribe("mumalab/fridge/effect");
@@ -109,6 +135,7 @@ void setup()
       client.subscribe("mumalab/fridge/ticker/bounce");
       client.subscribe("mumalab/fridge/ticker/direction");
       client.subscribe("mumalab/fridge/ticker/text");
+      */
       debugPrint("MQTT connected");
       MQTTconnected = true;
     } else {
