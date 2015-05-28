@@ -37,7 +37,9 @@
 #include "Life.cpp"
 #include "Sprite.cpp"
 #include "RainbowColor.cpp"
-#include "SerialReceiver.h"
+
+// Create an IntervalTimer object 
+IntervalTimer intervalTimer;
 
 // Teensy 3.1 pinout:
 // ====================
@@ -87,7 +89,7 @@ const unsigned char TxtDemo[] = { EFFECT_SCROLL_LEFT "      LEFT SCROLL "
 // publish mqtt message to ESP8266 over Serial1
 void mqttPublish(String strTopic, String strMessage) {
   // send resetChar + topic + separator + message + \n
-  // f.e. "#mumalab/fridge/state:1\n"
+  // f.e. "#m/s:1\n"
   Serial1.print(SerialReceiver::resetChar);
   Serial1.print(strTopic);
   Serial1.print(":");
@@ -96,11 +98,7 @@ void mqttPublish(String strTopic, String strMessage) {
 
 // handle received serial data (myqtt messages from ESP8266)
 void processSerialData(String strTopic, String strMessage)
-{
-  // remove all leading and trailing whitespaces
-  strTopic.trim();
-  strMessage.trim();
-  
+{ 
   // print out debug messages
   Serial.print("Received: ");
   Serial.print(strTopic);
@@ -108,49 +106,30 @@ void processSerialData(String strTopic, String strMessage)
   Serial.println(strMessage);
   
   // handle all mqtt messages
-  if (strTopic.startsWith("mumalab")) {
-    if (strTopic == "mumalab/fridge/state") {
+  if (strTopic.startsWith("m/")) {
+    if (strTopic == "m/s") {
       state = strMessage.toInt();
-    } else if (strTopic == "mumalab/fridge/brightness") {
+    } else if (strTopic == "m/b") {
       brightness = strMessage.toInt();
       brightness = min(255, max(brightness, 0));
       FastLED.setBrightness(brightness);
-    } else if (strTopic == "mumalab/fridge/effect") {
-      if (strMessage == "twinkle") {
-        animation.setEffect(1);
-      } else if (strMessage == "plasma") {
-        animation.setEffect(2);
-      } else if (strMessage == "snake") {
-        animation.setEffect(3);
-      } else if (strMessage == "life") {
-        animation.setEffect(4);
-      } else if (strMessage == "sprite") {
-        animation.setEffect(5);
-      } else if (strMessage == "rainbow") {
-        animation.setEffect(6);
-      }
+    } else if (strTopic == "m/e") {
+      animation.setEffect(strMessage.toInt());
       animation.setState(1);
       ticker.setState(0);
-    } else if (strTopic == "mumalab/fridge/ticker/color") {
+    } else if (strTopic == "m/tc") {
       ticker.setColor(strMessage);
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/ticker/bounce") {
+    } else if (strTopic == "m/tb") {
       ticker.setBounce(strMessage.toInt() == 1 ? true : false);
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/ticker/direction") {
-      if (strMessage == "left")
-        ticker.setDirection(1);
-      else if (strMessage == "right")
-        ticker.setDirection(2);
-      else if (strMessage == "up")
-        ticker.setDirection(3);
-      else if (strMessage == "down")
-        ticker.setDirection(4);
+    } else if (strTopic == "m/td") {
+      ticker.setDirection(strMessage.toInt());
       ticker.setState(1);
       animation.setState(0);
-    } else if (strTopic == "mumalab/fridge/ticker/text") {
+    } else if (strTopic == "m/tt") {
       ticker.setText(strMessage);
       ticker.setState(1);
       animation.setState(0);
@@ -189,50 +168,100 @@ void DrawOneFrame()
   }
 }
 
+unsigned long initial_time;
+
 // all LEDs black
 void allOff() {
+  initial_time = millis();
+  
   fill_solid(leds[0], leds.Size(), CRGB::Black);
   FastLED.setBrightness(0);
   FastLED.show();
+  
+  unsigned long current_time = millis();
+  Serial.print("allOff - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doTwinkle() {
+  initial_time = millis();
+    
   Twinkle twinkle(leds[0], leds.Width(), leds.Height(), true, true);
   twinkle.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doTwinkle - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doPlasma() {
+  initial_time = millis();
+  
   Plasma plasma(leds[0], leds.Width(), leds.Height());
   plasma.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doPlasma - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doSnake() {
+  initial_time = millis();
+  
   Snake snake(leds[0], leds.Width(), leds.Height());
   snake.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doSnake - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doLife() {
+  initial_time = millis();
+  
   Life life(leds[0], leds.Width(), leds.Height(), 56);
   life.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doLife - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doSprite() {
+  initial_time = millis();
+  
   Sprite sprite(leds[0], leds.Width(), leds.Height());
   sprite.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doSprite - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doRainbowColor() {
+  initial_time = millis();
+  
   RainbowColor rainbowColor(leds[0], leds.Width(), leds.Height());
   rainbowColor.start();
+  
+  unsigned long current_time = millis();
+  Serial.print("doRainbowColor - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 void doScrollText() {
+  initial_time = millis();
+  
   if (ScrollingMsg.UpdateText() == -1) {
     ScrollingMsg.SetText((unsigned char *)TxtDemo, sizeof(TxtDemo) - 1);
   } else {
     FastLED.show();
   }
   delay(10);
+  
+  unsigned long current_time = millis();
+  Serial.print("doScrollText - time: ");
+  Serial.println(current_time - initial_time);
 }
 
 // setup demo code
@@ -243,7 +272,7 @@ void setup() {
   // set speed of UART to communicate with ESP8266 WiFi module
   Serial.println("initial UART");
   Serial1.begin(115200);
-
+  
   // initial the serial receiver with 'Serial1' serialport, ':' separator and '#' reset char
   // SerialReceiver will reset collection data on '#'
   SerialReceiver::initial(Serial1, ':', '#');

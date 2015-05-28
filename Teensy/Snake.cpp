@@ -41,10 +41,15 @@ private:
         }
     }
     
-    void shuffleDown() {
+    bool shuffleDown() {
         for (byte i = SNAKE_LENGTH - 1; i > 0; i--) {
+            SerialReceiver::processSerialEvent();
+            if (SerialReceiver::isReady) {
+              return false;
+            }
             pixels[i] = pixels[i - 1];
         }
+        return true;
     }
     
 public:
@@ -59,7 +64,8 @@ public:
     void start() {
         clearLeds();
         for (int frameNo = 0; frameNo < 1000; frameNo++) {
-            shuffleDown();
+            if (!shuffleDown())
+              return;
             if (random(10) > 6) {
                 newDirection();
             }
@@ -79,6 +85,10 @@ public:
             }
             fill_rainbow(colours, SNAKE_LENGTH, initialHue++);
             for (byte i = 0; i < SNAKE_LENGTH; i++) {
+                SerialReceiver::processSerialEvent();
+                if (SerialReceiver::isReady) {
+                  return;
+                }
                 pixel(pixels[i].x, pixels[i].y) = colours[i] %= (255 - i * (255 / SNAKE_LENGTH));
             }
             FastLED.show();

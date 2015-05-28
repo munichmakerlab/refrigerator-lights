@@ -47,9 +47,11 @@ public:
     void start() {
         for (int i = 0; i < 400; i++) {
             if (random(100) > 98) {
-                blit(ghostData, 178, random(0, width - spriteWidth), random(0, height - spriteHeight));
+                if (!blit(ghostData, 178, random(0, width - spriteWidth), random(0, height - spriteHeight)))
+                  return;
             } else {
-                blit(heartData, 0, random(0, width - spriteWidth), random(0, height - spriteHeight));
+                if (!blit(heartData, 0, random(0, width - spriteWidth), random(0, height - spriteHeight)))
+                  return;
             }
             FastLED.show();
             delay(100);
@@ -59,10 +61,14 @@ public:
         }
     }
     
-    void blit(uint8_t *sprite, uint8_t hue, int x, int y) {
+    bool blit(uint8_t *sprite, uint8_t hue, int x, int y) {
         uint8_t saturation = random(8, 16) * 16;
         for (int spx = 0; spx < spriteWidth; spx++) {
             for (int spy = 0; spy < spriteHeight; spy++) {
+                SerialReceiver::processSerialEvent();
+                if (SerialReceiver::isReady) {
+                  return false;
+                }
                 if (inXRange(spx + x) && inYRange(spy + y)) {
                     uint8_t spritePixel = sprite[spy * spriteHeight + spx];
                     if (spritePixel) {
@@ -71,6 +77,7 @@ public:
                 }
             }
         }
+        return true;
     }
 
 };

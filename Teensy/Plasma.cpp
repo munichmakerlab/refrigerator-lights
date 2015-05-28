@@ -26,6 +26,10 @@ public:
     void calcFrame(int time) {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
+                SerialReceiver::processSerialEvent();
+                if (SerialReceiver::isReady) {
+                  return;
+                }
                 int16_t v = 0;
                 uint16_t wibble = sin8(time);
                 v += sin16(x * wibble * 8 + time);

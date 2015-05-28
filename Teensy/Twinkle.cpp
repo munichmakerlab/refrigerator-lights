@@ -30,6 +30,10 @@ public:
     void start() {
         for (uint16_t frame = 0x0000, iterations = 0; iterations < 2250; frame += 0x20, iterations++) {
             for (int i = 0; i < width * height; i++) {
+                SerialReceiver::processSerialEvent();
+                if (SerialReceiver::isReady) {
+                  return;
+                }
                 if (leds[i]) {
                     leds[i].fadeToBlackBy(50);
                     if (!leds[i]) {

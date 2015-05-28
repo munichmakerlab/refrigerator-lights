@@ -93,6 +93,10 @@ public:
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if (delta[deltaIndex(x, y)] & (1 << (x < 16 ? x : x - 16))) {
+                    SerialReceiver::processSerialEvent();
+                    if (SerialReceiver::isReady) {
+                      return;
+                    }
                     if (pixel(x, y)) {
                         pixel(x, y) = CRGB::Black;
                     } else {
@@ -110,6 +114,10 @@ public:
     void fadeout() {
         for (int brightness = 0; brightness < 256; brightness++) {
             for (int i = 0; i < width * height; i++) {
+                SerialReceiver::processSerialEvent();
+                if (SerialReceiver::isReady) {
+                  return;
+                }
                 leds[i]--;
             }
             FastLED.show();

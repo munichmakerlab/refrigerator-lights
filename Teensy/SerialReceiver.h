@@ -54,12 +54,4 @@ class SerialReceiver {
     }
 };
 
-Stream *SerialReceiver::serial = 0;
-char SerialReceiver::separator = ' ';
-char SerialReceiver::resetChar = ' ';
-boolean SerialReceiver::isReady = false;
-boolean SerialReceiver::hasPayload = false;
-String SerialReceiver::command = "";
-String SerialReceiver::payload = "";
-
 #endif // #ifndef __SERIAL_RECEIVER_H__
