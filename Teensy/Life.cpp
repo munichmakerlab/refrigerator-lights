@@ -37,6 +37,10 @@ public:
             for (int time = 0; time < random(96, 156); time++) {
                 for (int x = 0; x < width; x++) {
                     for (int y = 0; y < height; y++) {
+                        SerialReceiver::processSerialEvent();
+                        if (SerialReceiver::isReady) {
+                          return;
+                        }
                         int neighbours = numNeighbours(x, y);
                         if (pixel(x, y)) {
                             if (neighbours < 2 || neighbours > 3) {

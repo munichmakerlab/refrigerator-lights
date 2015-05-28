@@ -127,15 +127,6 @@ void setup()
       for (int i = 0; i < topicsMap_count; ++i) {
         client.subscribe(sMQTTTopicsMap[i].normalStr);
       }
-      /*
-      client.subscribe("mumalab/fridge/state");
-      client.subscribe("mumalab/fridge/brightness");
-      client.subscribe("mumalab/fridge/effect");
-      client.subscribe("mumalab/fridge/ticker/color");
-      client.subscribe("mumalab/fridge/ticker/bounce");
-      client.subscribe("mumalab/fridge/ticker/direction");
-      client.subscribe("mumalab/fridge/ticker/text");
-      */
       debugPrint("MQTT connected");
       MQTTconnected = true;
     } else {

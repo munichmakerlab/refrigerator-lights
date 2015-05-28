@@ -168,100 +168,50 @@ void DrawOneFrame()
   }
 }
 
-unsigned long initial_time;
-
 // all LEDs black
 void allOff() {
-  initial_time = millis();
-  
   fill_solid(leds[0], leds.Size(), CRGB::Black);
   FastLED.setBrightness(0);
   FastLED.show();
-  
-  unsigned long current_time = millis();
-  Serial.print("allOff - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doTwinkle() {
-  initial_time = millis();
-    
   Twinkle twinkle(leds[0], leds.Width(), leds.Height(), true, true);
   twinkle.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doTwinkle - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doPlasma() {
-  initial_time = millis();
-  
   Plasma plasma(leds[0], leds.Width(), leds.Height());
   plasma.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doPlasma - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doSnake() {
-  initial_time = millis();
-  
   Snake snake(leds[0], leds.Width(), leds.Height());
   snake.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doSnake - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doLife() {
-  initial_time = millis();
-  
   Life life(leds[0], leds.Width(), leds.Height(), 56);
   life.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doLife - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doSprite() {
-  initial_time = millis();
-  
   Sprite sprite(leds[0], leds.Width(), leds.Height());
   sprite.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doSprite - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 void doRainbowColor() {
-  initial_time = millis();
-  
   RainbowColor rainbowColor(leds[0], leds.Width(), leds.Height());
   rainbowColor.start();
-  
-  unsigned long current_time = millis();
-  Serial.print("doRainbowColor - time: ");
-  Serial.println(current_time - initial_time);
 }
 
-void doScrollText() {
-  initial_time = millis();
-  
+void doScrollText() { 
   if (ScrollingMsg.UpdateText() == -1) {
     ScrollingMsg.SetText((unsigned char *)TxtDemo, sizeof(TxtDemo) - 1);
   } else {
     FastLED.show();
   }
   delay(10);
-  
-  unsigned long current_time = millis();
-  Serial.print("doScrollText - time: ");
-  Serial.println(current_time - initial_time);
 }
 
 // setup demo code
@@ -307,7 +257,6 @@ void loop()
 
   // handle received serial commands
   if (!SerialReceiver::isReady) {
-    //delay(10);
     return;
   }
   // handles the received data (command and message)
