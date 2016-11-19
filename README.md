@@ -19,9 +19,9 @@ Hardware
 * 5V 12A power supply
 * WeMos d1 mini (ESP8266 devboard)
 
-Wiring
+Wiring ([Fritzing file](/fritzing/esp8266-fridge-lights-wiring.fzz))
 ------
-![wiring diagram](/fritzing/esp8266-fridge-lights.png "wiring diagram")
+![wiring diagram](/fritzing/esp8266-fridge-lights-wiring.png "wiring diagram")
 
 Libraries
 ---------
