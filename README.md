@@ -37,25 +37,36 @@ You have to install the Arduino IDE 1.6.5.
 * **Arduino** > **Tools** > **Board** > **Boards Manager** > type in **ESP8266** and install the board
 * download all libraries and copy folders to Arduino library path.
 
+Upload Sketch
+-------------
+* Upload ESP8266 Sketch Data: **Tools** > **ESP8266 Sketch Data Upload**
+*  ![upload sketch data on ArduinoIDE](/arduino_upload_sketch_data.png "upload sketch data")
+* Upload Sketch: **Sketch** > **Upload**
+
 MQTT Topics
 -----------
-| topic                           | message                                            |
-| ------------------------------- | -------------------------------------------------- |
-| mumalab/fridge/uptime           | String(millis())                                   |
-| mumalab/fridge/state            | 1 / 0                                              |
-| mumalab/fridge/brightness       | 0 to 255                                           |
-| mumalab/fridge/effect           | twinkle / plasma / snake / life / sprite / rainbow |
+| topic                                  | message                                                               |
+| -------------------------------------- | --------------------------------------------------------------------- |
+| FridgeLights/13435218/config           | reboot                                                                |
+| FridgeLights/13435218/mode             | normal, alert, tetris                                                 |
+| FridgeLights/13435218/brightness       | 0 to 255, up, down                                                    |
+| FridgeLights/13435218/background       | black, plasma, snake, life, fire, lava, cloud, blackwhite, blackgreen |
+| FridgeLights/13435218/color            | **r,g,b**: e.g. **255,0,0** = red                                     |
+| FridgeLights/13435218/color/effect     | solid, hue, random                                                    |
+| FridgeLights/13435218/tetris           | reset                                                                 |
+| FridgeLights/13435218/tetris/move      | left, right, up, down                                                 |
+| FridgeLights/13435218/brightness       | 0 to 255                                                              |
 
 **not yet implemented:**
 
-| topic                           | message                                            |
-| ------------------------------- | -------------------------------------------------- |
-| mumalab/fridge/ticker/color     | #000000 to #ffffff                                 |
-| mumalab/fridge/ticker/bounce    | 1 / 0                                              |
-| mumalab/fridge/ticker/direction | left / right / up / down                           |
-| mumalab/fridge/ticker/text      | scroll message as text...                          |
+| topic                                  | message                                            |
+| -------------------------------------- | -------------------------------------------------- |
+| FridgeLights/13435218/ticker/color     | #000000 to #ffffff                                 |
+| FridgeLights/13435218/ticker/bounce    | 1 / 0                                              |
+| FridgeLights/13435218/ticker/direction | left / right / up / down                           |
+| FridgeLights/13435218/ticker/text      | scroll message as text...                          |
 
 
 TODOs
 -----
-* bugfix and add the text ticker class
+* bugfix and add the text ticker functionallity
