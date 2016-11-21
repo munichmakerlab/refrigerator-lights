@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="author" content="Juergen Skrotzky, JorgenVikingGod@gmail.com">
+    <title>MuMaLab - Refrigerator Lights</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="bootstrap.mod.min.css">
+    <style>
+      body {padding-top: 70px;}
+      .glyphicon{text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;}
+      canvas:focus {outline: none;}
+    </style>
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <!--<script src="huewheel.min.js"></script>-->
+    <script type="text/javascript">
+      var ws=null;
+      var hw;
+      var color="255,255,255";
+      var mode="normal";
+      var color_effect="solid";
+      var background="black";
+      var bi=5;
+      var bm=["0","10","25","50","75","100","175","255"];
+      var brightness=bm[bi];
+      function iByB(bv){return $.inArray(bv,bm);}
+      function bu(){bi=($.inArray(brightness,bm)+1)%bm.length;brightness=bm[bi];}
+      function bd(){bi=($.inArray(brightness,bm)-1+bm.length)%bm.length;brightness=bm[bi];}
+      function d(m){
+        if(!m){return;}
+        var t=m.t;
+        var p=m.p;
+        console.log(m);
+        if(t=="color"){color=p;var cb=color.split(",")[2];/*hw.rgb(color.split(",")[0],color.split(",")[1],color.split(",")[2]);*/ub("rl-c",color);}
+        if(t=="mode"){mode=p;ub("rl-e",mode);}
+        if(t=="color_effect"){color_effect=p;ub("rl-c-e",color_effect);}
+        if(t=="background"){background=p;ub("rl-bg",background);}
+        if(t=="brightness"){
+          brightness=p;bi=iByB(brightness);ub("rl-b",brightness);
+          $('#brightness').attr("p", brightness);
+          $('#brightness').text(brightness);
+        }
+      }
+      function ub(cs,v){$("button."+cs).each(function(idx,bt){var btn = $(bt);btn.removeClass("active");if(btn.attr("p")==v){btn.addClass("active");}});}
+      function send(t,m){
+        $.get('/'+t,{payload:m}).done(function(dt){
+          d({t:t,p:m});
+          if(t=='color'){
+            $.get('/color_effect',{payload:'solid'}).done(function(dt2){
+              d({t:'color_effect',p:'solid'});
+            });
+          }
+        });
+      }
+      function startEvents(){
+        var es=new EventSource('/events');
+        es.onopen=function(e){console.log("Events Opened");};
+        es.onerror=function(e){if(e.target.readyState!=EventSource.OPEN){console.log("Events Closed");}};
+        es.onmessage=function(e){console.log("Event: "+e.data);};
+        es.addEventListener('ota',function(e){console.log("Event[ota]: "+e.data);},false);
+      }
+      function querySettings(){
+        var query={};
+        $.get('/settings',query).done(function(data){
+          console.log('/settings response: ' + data);
+          var m=JSON.parse(data);
+          console.log(m);
+          d({t:'brightness',p:m.brightness});
+          d({t:'color',p:m.color});
+          d({t:'color_effect',p:m.color_effect});
+          d({t:'background',p:m.background});
+          d({t:'mode',p:m.mode});
+        });
+      }
+      $(document).ready(function() {
+        querySettings();
+        $("button.rl-bg,button.rl-c-e,button.rl-c,button.rl-e,button.rl-tetris,button.rl-b").click(function(){send($(this).attr("t"), $(this).attr("p"));});
+        $("button.rl-b-arrow").click(function(){var t=$(this).attr("t");var p=$(this).attr("p");if(p=="down"){bd();}else{bu();}p=brightness;send(t,p);});
+        //hw=new HueWheel("huewheel",{onClick:function(ev){send("color",ev.r+","+ev.g+","+ev.b);}});
+      });
+    </script>
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">MuMaLab</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="index.html">Dashboard</a></li>
+            <!--<li><a href="settings.html">Settings</a></li>-->
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <h3>MuMaLab - Refrigerator Lights</h3>
+      <div class="row">
+        <div style="display: none" class="col-lg-4 col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">
+              <h3 class="panel-title">Forground Color</h3>
+            </div>
+            <div class="panel-body">
+              <p>Click to change foreground color</p>
+              <button type="button" class="rl-c btn btn-lg btn-block btn-default" t="color" p="255,255,255">White <span class="pull-right glyphicon glyphicon-tint" style="color: #ffffff;"></span></button>
+              <button type="button" class="rl-c btn btn-lg btn-block btn-default" t="color" p="255,0,0">Red <span class="pull-right glyphicon glyphicon-tint" style="color: #ff0000;"></span></button>
+              <button type="button" class="rl-c btn btn-lg btn-block btn-default" t="color" p="0,255,0">Green <span class="pull-right glyphicon glyphicon-tint" style="color: #00ff00;"></span></button>
+              <button type="button" class="rl-c btn btn-lg btn-block btn-default" t="color" p="0,0,255">Blue <span class="pull-right glyphicon glyphicon-tint" style="color: #0000ff;"></span></button>
+              <button type="button" class="rl-c btn btn-lg btn-block btn-default" t="color" p="255,255,0">Yellow <span class="pull-right glyphicon glyphicon-tint" style="color: #ffff00;"></span></button>
+              <p>Pick your color</p>
+              <div id="huewheel" style="margin: 0px auto; width: 100%; max-width: 250px;"></div>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+        <div style="display: none" class="col-md-6">
+          <div class="panel panel-warning">
+            <div class="panel-heading">
+              <h3 class="panel-title">Text Effect</h3>
+            </div>
+            <div class="panel-body">
+              <p>Click to change text effect</p>
+              <button type="button" class="rl-c-e btn btn-lg btn-block btn-default" t="color_effect" p="solid">Solid</button>
+              <button type="button" class="rl-c-e btn btn-lg btn-block btn-default" t="color_effect" p="hue">Hue Spectrum</button>
+              <button type="button" class="rl-c-e btn btn-lg btn-block btn-default" t="color_effect" p="random">Random</button>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+        <div class="col-md-6">
+          <div class="panel panel-info">
+            <div class="panel-heading">
+              <h3 class="panel-title">Background Color</h3>
+            </div>
+            <div class="panel-body">
+              <p>Click to change background color/effect</p>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="black">Black</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="snake">Snake</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="life">Game of Life</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="plasma">Plasma</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="fire">Fire</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="lava">Lava</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="cloud">Cloud</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="blackwhite">Black & White</button>
+              <button type="button" class="rl-bg btn btn-lg btn-block btn-default" t="background" p="blackgreen">Black & Green</button>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+        <div class="col-md-6">
+          <div class="panel panel-danger">
+            <div class="panel-heading">
+              <h3 class="panel-title">Global Settings</h3>
+            </div>
+            <div class="panel-body">
+              <p>Click to change brightness</p>
+              <div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="settings">
+                <div class="btn-group btn-group-lg" role="group">
+                  <button type="button" class="rl-b-arrow btn btn-default" t="brightness" p="down"><i class="glyphicon glyphicon-triangle-left"></i></button>
+                </div>
+                <div class="btn-group btn-group-lg" role="group">
+                  <button id="brightness" type="button" class="rl-b btn btn-default" t="brightness" p="50">50</button>
+                </div>
+                <div class="btn-group btn-group-lg" role="group">
+                  <button type="button" class="rl-b-arrow btn btn-default" t="brightness" p="up"><i class="glyphicon glyphicon-triangle-right"></i></button>
+                </div>
+              </div>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+        <div class="col-md-6">
+          <div class="panel panel-success">
+            <div class="panel-heading">
+              <h3 class="panel-title">Effect</h3>
+            </div>
+            <div class="panel-body">
+              <p>Click to change effect</p>
+              <button type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="normal">Normal Mode</button>
+              <button type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="alert">Alert Mode</button>
+              <button type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="tetris">Tetris</button>
+              <p style="display: none">Specials</p>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="bierleer">Bier Leer</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="heart">Heart</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="kuh">Du Kuh</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="bierkuh">Du Bierkuh</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="lachkuh">Du Lachkuh</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="wochenende">Wochenende</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="tag">Tag</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="nacht">Nacht</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="lach">Lachen</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="nie">Nie</button>
+              <button style="display: none" type="button" class="rl-e btn btn-lg btn-block btn-default" t="mode" p="wifi">WiFi</button>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+        <div class="col-md-6">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Tetris</h3>
+            </div>
+            <div class="panel-body">
+              <p>Tetris controls</p>
+              <div class="btn-group btn-group-lg btn-group-justified" role="group" aria-label="tetris">
+                <div class="btn-group btn-group-lg" role="group">
+                  <button type="button" class="rl-tetris btn btn-default" t="tetris_move" p="left"><i class="glyphicon glyphicon-triangle-left"></i></button>
+                </div>
+                <div class="btn-group btn-group-lg btn-group-vertical">
+                  <button type="button" class="rl-tetris btn btn-default" t="tetris_move" p="rotate"><i class="glyphicon glyphicon-repeat"></i></button>
+                  <button type="button" class="rl-tetris btn btn-default" t="tetris_move" p="down"><i class="glyphicon glyphicon-triangle-bottom"></i></button>
+                </div>
+                <div class="btn-group btn-group-lg" role="group">
+                  <button type="button" class="rl-tetris btn btn-default" t="tetris_move" p="right"><i class="glyphicon glyphicon-triangle-right"></i></button>
+                </div>
+              </div>
+              <p></p>
+              <button type="button" class="rl-tetris btn btn-lg btn-block btn-default" t="tetris" p="reset"><i class="glyphicon glyphicon-refresh"></i> Reset</button>
+            </div><!-- /panel-body -->
+          </div><!-- /panel panel-primary -->
+        </div><!-- /col-lg-4 col-md-6 -->
+      </div><!-- /row -->
+    </div><!-- /container-fluid -->
+  </body>
+</html>
