@@ -29,7 +29,7 @@
 // LED settings
 #define COLOR_ORDER           GRB
 #define CHIPSET               WS2812B
-#define DATA_PIN              D2
+#define DATA_PIN              D5
 
 int brightness               = 100;
 
