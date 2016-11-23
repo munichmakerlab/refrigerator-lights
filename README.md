@@ -47,24 +47,29 @@ MQTT Topics
 -----------
 | topic                                  | message                                                               |
 | -------------------------------------- | --------------------------------------------------------------------- |
-| FridgeLights/13435218/config           | reboot                                                                |
-| FridgeLights/13435218/mode             | normal, alert, tetris                                                 |
-| FridgeLights/13435218/brightness       | 0 to 255, up, down                                                    |
-| FridgeLights/13435218/background       | black, plasma, snake, life, fire, lava, cloud, blackwhite, blackgreen |
-| FridgeLights/13435218/color            | **r,g,b**: e.g. **255,0,0** = red                                     |
-| FridgeLights/13435218/color/effect     | solid, hue, random                                                    |
-| FridgeLights/13435218/tetris           | reset                                                                 |
-| FridgeLights/13435218/tetris/move      | left, right, up, down                                                 |
-| FridgeLights/13435218/brightness       | 0 to 255                                                              |
+| mumalab/fridge/lights/config           | reboot                                                                |
+| mumalab/fridge/lights/mode             | normal, alert, tetris                                                 |
+| mumalab/fridge/lights/brightness       | 0 to 255, up, down                                                    |
+| mumalab/fridge/lights/background       | black, plasma, snake, life, fire, lava, cloud, blackwhite, blackgreen |
+| mumalab/fridge/lights/tetris           | reset                                                                 |
+| mumalab/fridge/lights/tetris/move      | left, right, up, down                                                 |
+| mumalab/fridge/lights/brightness       | 0 to 255                                                              |
+
+**no functionallity yet (for text and icons):**
+
+| topic                                  | message                                            |
+| -------------------------------------- | -------------------------------------------------- |
+| mumalab/fridge/lights/color            | **r,g,b**: e.g. **255,0,0** = red                  |
+| mumalab/fridge/lights/color/effect     | solid, hue, random                                 |
 
 **not yet implemented:**
 
 | topic                                  | message                                            |
 | -------------------------------------- | -------------------------------------------------- |
-| FridgeLights/13435218/ticker/color     | #000000 to #ffffff                                 |
-| FridgeLights/13435218/ticker/bounce    | 1 / 0                                              |
-| FridgeLights/13435218/ticker/direction | left / right / up / down                           |
-| FridgeLights/13435218/ticker/text      | scroll message as text...                          |
+| mumalab/fridge/lights/ticker/color     | #000000 to #ffffff                                 |
+| mumalab/fridge/lights/ticker/bounce    | 1 / 0                                              |
+| mumalab/fridge/lights/ticker/direction | left / right / up / down                           |
+| mumalab/fridge/lights/ticker/text      | scroll message as text...                          |
 
 
 TODOs
