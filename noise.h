@@ -40,7 +40,7 @@ void plasma() {
           return;
         int16_t r = sin16(PlasmaTime) / 256;
         int16_t h = sin16(x * r * PLASMA_X_FACTOR + PlasmaTime) + cos16(y * (-r) * PLASMA_Y_FACTOR + PlasmaTime) + sin16(y * x * (cos16(-PlasmaTime) / 256) / 2);
-        ledsBack(x,y) = CHSV((uint8_t)((h / 256) + 128), 255, 127);
+        ledsBack(x,y) = CHSV((uint8_t)((h / 256) + 128), 255, 255);
       }
     }
     uint16_t OldPlasmaTime = PlasmaTime;
@@ -205,7 +205,7 @@ void mapNoiseToLEDsUsingPalette(CRGBPalette16 palette, uint8_t hueReduce = 0)
       } else {
         bri = dim8_raw( bri * 2);
       }
-      bri = map(bri, 0,255, 0,64);
+      //bri = map(bri, 0,255, 0,64);
 
       if(hueReduce > 0) {
         if(index < hueReduce) index = 0;

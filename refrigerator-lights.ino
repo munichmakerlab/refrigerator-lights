@@ -61,7 +61,7 @@ void mqttMessageReceived(const MQTT::Publish& pub) {
   mqttMessages.push(sMqttMessage(mqttTopic,mqttPayload));
   DEBUG_PRINTLN("receive MQTT: topic='" + mqttTopic + "', message='" + mqttPayload + "'");
   mqttNewMessage = true;
-  // OTA: "FridgeLights/<CHIP-ID>/ota", bin file to flash
+  // OTA: "mumalab/fridge/lights/ota", bin file to flash
   if (mqttTopic == String(strTopicPrefixChipID + "ota")) {
     uint32_t startTime = millis();
     uint32_t size = pub.payload_len();
@@ -95,7 +95,7 @@ void handleMQTTMessages() {
   String mqttTopic   = newMqttMessage.topic;
   String mqttPayload = newMqttMessage.payload;
 
-  // config: "FridgeLights/<CHIP-ID>/config", "reboot"
+  // config: "mumalab/fridge/lights/config", "reboot"
   if (mqttTopic == String(strTopicPrefixChipID + "config")) {
     if (mqttPayload == "reboot") {
       DEBUG_PRINTLN("force reboot");
@@ -103,7 +103,7 @@ void handleMQTTMessages() {
       return;
     }
   }
-  // mqtt/host: "FridgeLights/<CHIP-ID>/mqtt/host", "mqtt.your-host.com" (mqtt host name or ip)
+  // mqtt/host: "mumalab/fridge/lights/mqtt/host", "mqtt.your-host.com" (mqtt host name or ip)
   if (mqttTopic == String(strTopicPrefixChipID + "mqtt/host")) {
     strcpy(mqtt_host, mqttPayload.c_str());
     // use configured broker hostname/port
@@ -112,7 +112,7 @@ void handleMQTTMessages() {
     DEBUG_PRINTLN(mqtt_host);
     return;
   }
-  // mqtt/port: "FridgeLights/<CHIP-ID>/mqtt/port", "1883" (mqtt broker port)
+  // mqtt/port: "mumalab/fridge/lights/mqtt/port", "1883" (mqtt broker port)
   if (mqttTopic == String(strTopicPrefixChipID + "mqtt/port")) {
     strcpy(mqtt_port, mqttPayload.c_str());
     // use configured broker hostname/port
@@ -121,28 +121,28 @@ void handleMQTTMessages() {
     DEBUG_PRINTLN(mqtt_port);
     return;
   }
-  // mqtt/user: "FridgeLights/<CHIP-ID>/mqtt/user", "user" (mqtt broker user name)
+  // mqtt/user: "mumalab/fridge/lights/mqtt/user", "user" (mqtt broker user name)
   if (mqttTopic == String(strTopicPrefixChipID + "mqtt/user")) {
     strcpy(mqtt_user, mqttPayload.c_str());
     DEBUG_PRINT("mqtt user ");
     DEBUG_PRINTLN(mqtt_user);
     return;
   }
-  // mqtt/pass: "FridgeLights/<CHIP-ID>/mqtt/pass", "pass" (mqtt broker user password)
+  // mqtt/pass: "mumalab/fridge/lights/mqtt/pass", "pass" (mqtt broker user password)
   if (mqttTopic == String(strTopicPrefixChipID + "mqtt/pass")) {
     strcpy(mqtt_pass, mqttPayload.c_str());
     DEBUG_PRINT("mqtt password ");
     DEBUG_PRINTLN(mqtt_pass);
     return;
   }
-  // mqtt/id: "FridgeLights/<CHIP-ID>/mqtt/id", "WordClock" (mqtt broker client id)
+  // mqtt/id: "mumalab/fridge/lights/mqtt/id", "WordClock" (mqtt broker client id)
   if (mqttTopic == String(strTopicPrefixChipID + "mqtt/id")) {
     strcpy(mqtt_client_id, mqttPayload.c_str());
     DEBUG_PRINT("mqtt client id ");
     DEBUG_PRINTLN(mqtt_client_id);
     return;
   }
-  // brightness: "FridgeLights/<CHIP-ID>/brightness", "0-255"
+  // brightness: "mumalab/fridge/lights/brightness", "0-255"
   if (mqttTopic == String(strTopicPrefixChipID + "brightness")) {
     if (mqttPayload == "up") {
       brightness += 50;
@@ -162,25 +162,25 @@ void handleMQTTMessages() {
     show_at_max_brightness_for_power();
     return;
   }
-  // mode: "FridgeLights/<CHIP-ID>/mode", "normal" (normal|tetris|ticker)
+  // mode: "mumalab/fridge/lights/mode", "normal" (normal|tetris|ticker)
   if (mqttTopic == String(strTopicPrefixChipID + "mode")) {
     effectMode = mqttPayload != "" ? mqttPayload : "normal";
     resetFront();
     return;
   }
-  // color: "FridgeLights/<CHIP-ID>/color", "255,0,0" (red,green,blue)
+  // color: "mumalab/fridge/lights/color", "255,0,0" (red,green,blue)
   if (mqttTopic == String(strTopicPrefixChipID + "color")) {
     LedR = getStringPartByNr(mqttPayload, ',', 0);
     LedG = getStringPartByNr(mqttPayload, ',', 1);
     LedB = getStringPartByNr(mqttPayload, ',', 2);
     return;
   }
-  // color/effect: "FridgeLights/<CHIP-ID>/color/effect", "hue" (solid|hue|random)
+  // color/effect: "mumalab/fridge/lights/color/effect", "hue" (solid|hue|random)
   if (mqttTopic == String(strTopicPrefixChipID + "color/effect")) {
     colorEffect = mqttPayload != "" ? mqttPayload : "solid";
     return;
   }
-  // background: "FridgeLights/<CHIP-ID>/background", "plasma" (black|plasma|lava|fire|cloud|blackwhite|blackgreen)
+  // background: "mumalab/fridge/lights/background", "plasma" (black|plasma|lava|fire|cloud|blackwhite|blackgreen)
   if (mqttTopic == String(strTopicPrefixChipID + "background")) {
     background = mqttPayload != "" ? mqttPayload : "black";
     if (background == "snake") {
@@ -205,7 +205,7 @@ void handleMQTTMessages() {
     }
     return;
   }
-  // tetris/move: "FridgeLights/<CHIP-ID>/tetris/move", "rotate" (rotate|left|right|down)
+  // tetris/move: "mumalab/fridge/lights/tetris/move", "rotate" (rotate|left|right|down)
   if (mqttTopic == String(strTopicPrefixChipID + "tetris/move")) {
     JSRotate.SetState(HIGH);
     JSLeft.SetState(HIGH);
@@ -235,8 +235,8 @@ void setup() {
   // define topics and chip id
   strChipID = String(ESP.getChipId());
   strClientID = String(mqtt_client_id);
-  strTopicPrefix = strClientID + "/";
-  strTopicPrefixChipID = strTopicPrefix + strChipID + "/";
+  strTopicPrefix = "mumalab/fridge/lights/";  // = strClientID + "/";
+  strTopicPrefixChipID = strTopicPrefix;      // = strTopicPrefix + strChipID + "/";
 
   // set hostname
   strHostname = strClientID + "-" + strChipID;
@@ -265,7 +265,7 @@ void setup() {
   FastLED.clear(true);
 
   // This is defined in setup and used by the power management functionality and is currently set at 5V, 10A = 10000mA.
-  set_max_power_in_volts_and_milliamps(5, 1000);
+  set_max_power_in_volts_and_milliamps(5, 10000);
 
   resetFront();
   resetBack();
@@ -279,7 +279,6 @@ void setup() {
   DEBUG_PRINT("Connect to WiFi");
   if (ssid1 && pass1) WiFiMulti.addAP(ssid1, pass1);
   if (ssid2 && pass2) WiFiMulti.addAP(ssid2, pass2);
-  if (ssid3 && pass3) WiFiMulti.addAP(ssid3, pass3);
   uint8_t hue = 0;
   while(WiFiMulti.run() != WL_CONNECTED) {
     hue+=20;
