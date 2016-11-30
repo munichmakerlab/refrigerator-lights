@@ -29,14 +29,13 @@ void resetBack();
 CRGBPalette16 myPal = HeatColors_p;
 
 void alert() {
-  EVERY_N_MILLISECONDS(50) {
+  EVERY_N_MILLISECONDS(25) {
     resetFront();
     processMQTTLoop();
     if (mqttNewMessage)
       return;
     CRGB alertCol = ColorFromPalette(myPal, random8(0,255));
-    ledsFront.DrawRectangle(1,1, 13,8, alertCol);
-    ledsFront.DrawRectangle(3,3, 11,6, alertCol);
+    ledsFront.DrawFilledRectangle(0,0, 14,9, alertCol);
   }   
 }
 

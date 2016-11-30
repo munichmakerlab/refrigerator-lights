@@ -54,6 +54,8 @@
 #include "life.h"
 #include "front_effects.h"
 
+int temp_brightness = 255;
+
 void mqttMessageReceived(const MQTT::Publish& pub) {
   // handle message arrived
   String mqttTopic = pub.topic();
@@ -165,6 +167,16 @@ void handleMQTTMessages() {
   // mode: "mumalab/fridge/lights/mode", "normal" (normal|tetris|ticker)
   if (mqttTopic == String(strTopicPrefixChipID + "mode")) {
     effectMode = mqttPayload != "" ? mqttPayload : "normal";
+    if (effectMode == "alert") {
+      temp_brightness = brightness;
+      brightness = 255;
+      FastLED.setBrightness(brightness);
+      show_at_max_brightness_for_power();
+    } else {
+      brightness = temp_brightness;
+      FastLED.setBrightness(brightness);
+      show_at_max_brightness_for_power();
+    }
     resetFront();
     return;
   }
@@ -182,7 +194,7 @@ void handleMQTTMessages() {
   }
   // background: "mumalab/fridge/lights/background", "plasma" (black|plasma|lava|fire|cloud|blackwhite|blackgreen)
   if (mqttTopic == String(strTopicPrefixChipID + "background")) {
-    background = mqttPayload != "" ? mqttPayload : "black";
+    background = mqttPayload != "" ? mqttPayload : "plasma";
     if (background == "snake") {
       resetSnake();
     } else if (background == "life") {
@@ -229,6 +241,9 @@ void setup() {
   // initial serial port
   if(_debug)
     Serial.begin(9600);
+
+  WiFi.persistent(false);
+  WiFi.mode(WIFI_OFF);
 
   SPIFFS.begin();
 
@@ -277,6 +292,8 @@ void setup() {
   // connect wifi
   DEBUG_PRINTLN("");
   DEBUG_PRINT("Connect to WiFi");
+
+  WiFi.mode(WIFI_STA);
   if (ssid1 && pass1) WiFiMulti.addAP(ssid1, pass1);
   if (ssid2 && pass2) WiFiMulti.addAP(ssid2, pass2);
   uint8_t hue = 0;
@@ -340,6 +357,8 @@ void loop() {
     snake();
   } else if (background == "life") {
     life();
+  } else {
+    plasma();
   }
 
   processMQTTLoop();
