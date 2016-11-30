@@ -52,7 +52,7 @@ MQTT Topics
 | mumalab/fridge/lights/brightness       | 0 to 255, up, down                                                    |
 | mumalab/fridge/lights/background       | black, plasma, snake, life, fire, lava, cloud, blackwhite, blackgreen |
 | mumalab/fridge/lights/tetris           | reset                                                                 |
-| mumalab/fridge/lights/tetris/move      | left, right, up, down                                                 |
+| mumalab/fridge/lights/tetris/move      | left, right, down, rotate                                             |
 
 **no functionallity yet (for text and icons):**
 
